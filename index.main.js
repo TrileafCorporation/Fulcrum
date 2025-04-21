@@ -268,8 +268,6 @@ app.post('/savephotosnomaterwhat', async (req, res) => {
 // This example schedules the job to run every day at midnight.
 // Adjust the cron expression as needed.
 
-//Temporarely disable cron job
-
 cron.schedule('*/30 * * * *', async () => {
   console.log('Cron job triggered: Starting the photo-saving process.');
   try {
