@@ -1,9 +1,9 @@
-import fs from "fs";
-import path from "path";
+import fs from 'fs';
+import path from 'path';
 
 /**
  * Reads all items from a given folder and returns an array of file paths.
- *
+ * 
  * @param {string} folderPath - The path to the folder to read.
  * @param {object} [options]
  * @param {boolean} [options.onlyFiles=false] - Whether to include only files (exclude subdirectories).
@@ -24,11 +24,11 @@ export const getFilesInFolder = (folderPath, options = {}) => {
     const items = fs.readdirSync(folderPath);
 
     // 3. Build an array of absolute paths
-    let paths = items.map((item) => path.join(folderPath, item));
+    let paths = items.map(item => path.join(folderPath, item));
 
     // 4. Optional: Filter out directories if onlyFiles is true
     if (onlyFiles) {
-      paths = paths.filter((itemPath) => {
+      paths = paths.filter(itemPath => {
         const stats = fs.statSync(itemPath);
         return stats.isFile();
       });
@@ -36,17 +36,8 @@ export const getFilesInFolder = (folderPath, options = {}) => {
 
     // 5. Optional: Filter by common image file extensions if onlyImages is true
     if (onlyImages) {
-      const imageExtensions = new Set([
-        ".jpg",
-        ".jpeg",
-        ".png",
-        ".gif",
-        ".bmp",
-        ".webp",
-        ".tiff",
-        ".pdf",
-      ]);
-      paths = paths.filter((itemPath) => {
+      const imageExtensions = new Set(['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.tiff','.pdf']);
+      paths = paths.filter(itemPath => {
         const ext = path.extname(itemPath).toLowerCase();
         return imageExtensions.has(ext);
       });

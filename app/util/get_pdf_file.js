@@ -1,16 +1,16 @@
-import { createWriteStream } from "fs";
-import { pipeline } from "stream/promises";
-import { Readable } from "stream";
-import { fileURLToPath } from "url";
-import path from "path";
-import dotenv from "dotenv";
+import { createWriteStream } from 'fs';
+import { pipeline } from 'stream/promises';
+import { Readable } from 'stream';
+import { fileURLToPath } from 'url';
+import path from 'path';
+import dotenv from 'dotenv';
 
 // Setup __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Load environment variables
-dotenv.config({ path: path.resolve(__dirname, "../../.env") });
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 /**
  * Downloads a Fulcrum report as a PDF.
@@ -18,23 +18,18 @@ dotenv.config({ path: path.resolve(__dirname, "../../.env") });
  * @param {string} outputFile - The filename to save the PDF.
  */
 
-const filepath = path.resolve(__dirname, "./photos");
+const filepath = path.resolve(__dirname, './photos');
 
-export async function downloadFulcrumPDF(
-  reportId,
-  outputFile = `${filepath}/fulcrum_report.pdf`
-) {
+export async function downloadFulcrumPDF(reportId, outputFile = `${filepath}/fulcrum_report.pdf`) {
   try {
     const url = `https://api.fulcrumapp.com/run/8ef6ad42-669b-40fa-807d-f8bde7b3a898?record_id=${reportId}&token=${process.env.FULCRUM_TOKEN}`;
 
     const response = await fetch(url, {
-      headers: { "X-ApiToken": process.env.FULCRUM_TOKEN },
+      headers: { 'X-ApiToken': process.env.FULCRUM_TOKEN }
     });
 
     if (!response.ok) {
-      throw new Error(
-        `Failed to fetch PDF: ${response.status} ${response.statusText}`
-      );
+      throw new Error(`Failed to fetch PDF: ${response.status} ${response.statusText}`);
     }
 
     // Convert the WHATWG ReadableStream to a Node.js stream
@@ -46,7 +41,7 @@ export async function downloadFulcrumPDF(
     console.log(`✅ PDF report downloaded: ${outputFile}`);
     return outputFile;
   } catch (error) {
-    console.error("❌ Error fetching PDF report:", error);
+    console.error('❌ Error fetching PDF report:', error);
   }
 }
 
