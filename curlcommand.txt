@@ -1,0 +1,9 @@
+curl -X POST localhost:3000/savephotos
+
+pm2 start index.main.js
+pm2 stop index.main.js
+
+node index.main.js
+
+
+pm2 ls
