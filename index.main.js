@@ -125,12 +125,19 @@ async function savePhotosProcess() {
     });
 
     for (const record of records.objects) {
-      // if (record.id != "498e4a73-2457-4282-ac0b-7f72b646eab3"){continue } ;
+      // Project number 761718
+      // Comment out when testing is done
+      if (record.id != "92fcc1fd-2546-49ec-9e6a-894ebd47f7cf") {
+        continue;
+      }
+
+      console.log(record);
 
       let photo_array = extractPhotoObjects(record);
-      console.log(record.status);
+      let status = record.status;
+      console.log({ status });
 
-      if (record.status !== "Complete") {
+      if (status !== "Complete") {
         continue;
       }
 
@@ -220,8 +227,8 @@ app.post("/savephotos", async (req, res) => {
 // This example schedules the job to run every day at midnight.
 // Adjust the cron expression as needed.
 
-cron.schedule('*/30 * * * *', async () => {
-  console.log('Cron job triggered: Starting the photo-saving process.');
+cron.schedule("*/30 * * * *", async () => {
+  console.log("Cron job triggered: Starting the photo-saving process.");
   try {
     await savePhotosProcess();
     console.log("Cron job: Photo-saving process completed successfully.");
