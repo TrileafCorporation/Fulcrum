@@ -113,9 +113,9 @@ async function savePhotosProcess() {
     for (const record of records.objects) {
       // Project # 1234
       // Comment out when testing is done
-      if (record.id != "a2c03deb-5475-4dea-8e49-0b0faba1d7f3") {
-        continue;
-      }
+      // if (record.id != "a2c03deb-5475-4dea-8e49-0b0faba1d7f3") {
+      //   continue;
+      // }
 
       let photo_array = extractPhotoObjects(record);
       let status = record.status;
