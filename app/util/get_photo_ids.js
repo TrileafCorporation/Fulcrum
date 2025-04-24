@@ -1,18 +1,4 @@
-import { Client } from "fulcrum-app";
-import dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
-
-// Setup __dirname for ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Load environment variables
-dotenv.config({ path: path.resolve(__dirname, "../../.env") });
-
-// Define the async function to get photo IDs
-export const get_photo_ids = async () => {
-  const client = new Client(process.env.FULCRUM_TOKEN);
+export const get_photo_ids = async (client) => {
   const look_up_array = [];
 
   try {

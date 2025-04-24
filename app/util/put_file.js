@@ -2,9 +2,7 @@ import { promises as fs } from "fs";
 import path from "path";
 
 const sanitizeFileName = (filename) =>
-  filename
-    .replace(/[\n\r\\/]+/g, "-") // Replace line breaks and slashes with '-'
-    .trim();
+  filename.replace(/[\n\r\\/]+/g, "-").trim();
 
 async function fileExists(filePath) {
   try {
@@ -27,7 +25,6 @@ export async function copyImageToFolder(
     console.log("Source:", imagePath);
     console.log("Destination Folder (requested):", folderPath);
 
-    // Check if the originally requested destination folder exists.
     try {
       await fs.access(folderPath);
       console.log(`Destination folder exists at: ${folderPath}`);
@@ -37,31 +34,26 @@ export async function copyImageToFolder(
       const uncBase =
         "\\\\trileaf.local\\Project_Folders\\Shared\\Tech\\Fulcrum\\RecoveredUploads";
 
-      // Create the new destination folder path by appending secondary_folder_name.
       folderPath = path.join(uncBase, secondary_folder_name);
       console.log(
         `Original folder not found. Using alternate folder path: ${folderPath}`
       );
 
-      // Check if this alternate folder exists.
       try {
         await fs.access(folderPath);
         console.log(`Alternate destination folder exists at: ${folderPath}`);
       } catch (_) {
-        // Folder doesn't exist; create it.
         await fs.mkdir(folderPath, { recursive: true });
         console.log(`Alternate destination folder created at: ${folderPath}`);
       }
     }
 
-    // Determine the new file name.
     let { name, ext } = path.parse(imagePath);
     let photoObj = photo_array.find((photo) => photo.photo_id === name);
     console.log({ photo_array });
     console.log({ name });
     console.log({ photoObj });
 
-    // Project #, Field, Visit Notes
     let photo = photoObj?.caption
       ? photoObj.caption
       : "Please caption this photo project";
@@ -72,10 +64,6 @@ export async function copyImageToFolder(
     photo = sanitizeFileName(photo);
 
     let newFileName = `${photo}${ext}`;
-
-    // Change below to dynamic later
-
-    // Check for file naming conflicts and adjust if necessary.
     let destinationPath = path.join(folderPath, newFileName);
     let counter = 1;
 
@@ -86,7 +74,6 @@ export async function copyImageToFolder(
       counter++;
     }
 
-    // Copy the file to the determined destination folder.
     await fs.copyFile(imagePath, destinationPath);
     console.log(`File copied successfully to: ${destinationPath}`);
     return destinationPath;
