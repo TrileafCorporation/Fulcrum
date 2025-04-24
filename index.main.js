@@ -3,7 +3,7 @@ import { Client } from "fulcrum-app";
 import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
-import cron from "node-cron"; // Import node-cron
+import cron from "node-cron";
 import { get_onedrive_folders } from "./app/app.js";
 import { get_photos } from "./app/util/get_photos.js";
 import { clean_up_photos } from "./app/util/clean_up.js";
@@ -13,25 +13,21 @@ import { get_photo_ids } from "./app/util/get_photo_ids.js";
 import { downloadFulcrumPDF } from "./app/util/get_pdf_file.js";
 import { check_for_new_photos } from "./app/util/get_photos_check.js";
 
-// Initialize environment variables
 dotenv.config();
 
-// Funcition that grabs name:
+// Function that grabs name:
 function extractPhotoObjects(data) {
   const photos = [];
 
   function traverse(item) {
     if (Array.isArray(item)) {
-      // Iterate through each element of the array.
       for (const el of item) {
         traverse(el);
       }
     } else if (item && typeof item === "object") {
-      // If the object has both photo_id and caption, consider it a photo object.
       if (item.hasOwnProperty("photo_id") && item.hasOwnProperty("caption")) {
         photos.push(item);
       }
-      // Traverse each property in the object.
       for (const key in item) {
         if (item.hasOwnProperty(key)) {
           traverse(item[key]);
@@ -44,22 +40,16 @@ function extractPhotoObjects(data) {
   return photos;
 }
 
-// Initialize Fulcrum client
 const client = new Client(`${process.env.FULCRUM_TOKEN}`);
-
 const app = express();
-
-// Middleware to parse JSON (optional, based on your needs)
 app.use(express.json());
 
 // Function to find the "Field Docs\Photos" path
-
 function getFieldDocsPhotosPath(branch, projectNumber) {
   console.log(`Using branch: ${branch}`);
 
   let filePath = "\\\\trileaf.local\\Project_Folders";
 
-  // Build the base path from the branch.
   const basePath = path.join(filePath, branch);
   if (!fs.existsSync(basePath)) {
     console.warn(
@@ -68,7 +58,6 @@ function getFieldDocsPhotosPath(branch, projectNumber) {
     return path.join(filePath, "unexciting");
   }
 
-  // Find the project directory that starts with the given projectNumber.
   const items = fs.readdirSync(basePath, { withFileTypes: true });
   const projectDirEntry = items.find(
     (entry) => entry.isDirectory() && entry.name.startsWith(projectNumber)
@@ -83,7 +72,6 @@ function getFieldDocsPhotosPath(branch, projectNumber) {
 
   const projectPath = path.join(basePath, projectDirEntry.name);
 
-  // Check for "Field Docs" folder. Create it if it doesn't exist.
   const fieldDocsPath = path.join(projectPath, "Field Docs");
   if (!fs.existsSync(fieldDocsPath)) {
     try {
@@ -98,7 +86,6 @@ function getFieldDocsPhotosPath(branch, projectNumber) {
     console.log(`"Field Docs" folder already exists at: ${fieldDocsPath}`);
   }
 
-  // Check for "Photos" folder inside the "Field Docs" folder. Create it if it doesn't exist.
   const photosPath = path.join(fieldDocsPath, "Photos");
   if (!fs.existsSync(photosPath)) {
     try {
@@ -113,7 +100,6 @@ function getFieldDocsPhotosPath(branch, projectNumber) {
     console.log(`"Photos" folder already exists at: ${photosPath}`);
   }
 
-  // Return the final path to the "Photos" folder.
   return photosPath;
 }
 
@@ -125,37 +111,37 @@ async function savePhotosProcess() {
     });
 
     for (const record of records.objects) {
-      // if (record.id != "498e4a73-2457-4282-ac0b-7f72b646eab3"){continue } ;
+      // Project # 1234
+      // Comment out when testing is done
+      // if (record.id != "a2c03deb-5475-4dea-8e49-0b0faba1d7f3") {
+      //   continue;
+      // }
 
       let photo_array = extractPhotoObjects(record);
-      console.log(record.status);
+      let status = record.status;
 
-      if (record.status !== "Complete") {
+      if (status !== "Complete") {
         continue;
       }
 
       try {
-        // Fetch photo IDs
-        const look_up_array = await get_photo_ids();
+        const look_up_array = await get_photo_ids(client);
         const photos_check = await check_for_new_photos(
           record.id,
-          look_up_array
+          look_up_array,
+          client
         );
         console.log({ photos_check });
         if (photos_check) {
-          //fetch pdf report
           await downloadFulcrumPDF(record.id);
         }
-        // Fetch photos using record ID and photo IDs
-        await get_photos(`${record.id}`, look_up_array);
+        await get_photos(`${record.id}`, look_up_array, client);
 
-        // Get a list of all photo files in the local photos folder
         const photos = await getFilesInFolder("./app/util/photos", {
           onlyFiles: true,
         });
         console.log("Raw photo paths:", photos);
 
-        // Move each photo to the designated "Photos" folder
         for (const relativePhotoPath of photos) {
           let projectNum = record.form_values["bfd0"];
           let fieldVisitNotes = record.form_values["638f"];
@@ -179,7 +165,6 @@ async function savePhotosProcess() {
           );
         }
 
-        // Clean up the original photos folder
         await clean_up_photos("./app/util/photos");
 
         console.log(`Processed record ID: ${record.id} successfully.`);
@@ -199,11 +184,6 @@ async function savePhotosProcess() {
   }
 }
 
-// Health check route (optional)
-app.get("/health", (req, res) => {
-  res.sendStatus(200);
-});
-
 // Route to trigger the photo-saving process manually
 app.post("/savephotos", async (req, res) => {
   try {
@@ -216,12 +196,8 @@ app.post("/savephotos", async (req, res) => {
   }
 });
 
-// Set up node-cron to trigger the photo-saving process on schedule
-// This example schedules the job to run every day at midnight.
-// Adjust the cron expression as needed.
-
-cron.schedule('*/30 * * * *', async () => {
-  console.log('Cron job triggered: Starting the photo-saving process.');
+cron.schedule("*/30 * * * *", async () => {
+  console.log("Cron job triggered: Starting the photo-saving process.");
   try {
     await savePhotosProcess();
     console.log("Cron job: Photo-saving process completed successfully.");
@@ -230,7 +206,6 @@ cron.schedule('*/30 * * * *', async () => {
   }
 });
 
-// Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is up and running on port ${PORT}`);
