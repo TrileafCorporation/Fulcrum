@@ -246,7 +246,9 @@ program
       console.log(`\n=== RECENT ENTRIES from ${options.file} ===\n`);
 
       recentLogs.forEach((log) => {
-        console.log(`${log.timestamp} [${log.level}] ${log.message}`);
+        // Handle logs that might not have timestamp field
+        const timestamp = log.timestamp || new Date().toISOString();
+        console.log(`${timestamp} [${log.level}] ${log.message}`);
         if (log.recordId)
           console.log(`  Record: ${log.recordId}, Project: ${log.projectNum}`);
         if (log.action) console.log(`  Action: ${log.action}`);

@@ -49,7 +49,6 @@ const enhancedJsonFormat = winston.format.combine(
       uptime: Math.round(process.uptime()) + "s",
     };
 
-    delete baseLog.timestamp; // Remove duplicate
     return JSON.stringify(baseLog);
   })
 );
