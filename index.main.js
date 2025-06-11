@@ -141,8 +141,13 @@ async function savePhotosProcess() {
   try {
     logger.processStart(0); // Will be updated with actual count
 
+    // Only fetch records updated in the last 7 days to avoid processing old projects
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
     const records = await client.records.all({
       form_id: `${process.env.FULCRUM_FORM_ID}`,
+      updated_since: sevenDaysAgo.toISOString(),
     });
 
     logger.info("Fetched records from Fulcrum", {
