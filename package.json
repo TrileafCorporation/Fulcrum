@@ -5,7 +5,14 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.main.js",
+    "logs": "node analyze-logs.js",
+    "logs:report": "node analyze-logs.js report",
+    "logs:errors": "node analyze-logs.js errors",
+    "logs:performance": "node analyze-logs.js performance",
+    "logs:uploads": "node analyze-logs.js uploads",
+    "logs:tail": "node analyze-logs.js tail"
   },
   "keywords": [],
   "author": "",
@@ -13,11 +20,13 @@
   "dependencies": {
     "@azure/msal-node": "^3.0.1",
     "@microsoft/microsoft-graph-client": "^3.0.7",
+    "commander": "^14.0.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "fulcrum-app": "^2.7.0",
     "isomorphic-fetch": "^3.0.0",
     "node-cron": "^3.0.3",
-    "node-fetch": "^3.3.2"
+    "node-fetch": "^3.3.2",
+    "winston": "^3.17.0"
   }
 }
