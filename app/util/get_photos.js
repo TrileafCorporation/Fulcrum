@@ -34,13 +34,14 @@ const writeStreamToFile = async (nodeStream, photoPath) => {
   });
 };
 
-const createRecord = async (accessKey, client) => {
+const createRecord = async (accessKey, client, record) => {
   const obj = {
     form_id: process.env.FULCRUM_FORM_LOOK_UP,
     latitude: 27.770787,
     longitude: -82.638039,
     form_values: {
       2426: accessKey,
+      cb30: record.form_values["bfd0"],
     },
   };
 
@@ -55,7 +56,7 @@ const createRecord = async (accessKey, client) => {
   }
 };
 
-export const get_photos = async (record_id, look_up, client) => {
+export const get_photos = async (record_id, look_up, client, record) => {
   await ensurePhotosDirectory();
 
   try {
@@ -87,7 +88,7 @@ export const get_photos = async (record_id, look_up, client) => {
           await writeStreamToFile(nodeStream, photoFilename);
           console.log(`Photo saved: ${photoFilename}`);
 
-          await createRecord(photo.access_key, client);
+          await createRecord(photo.access_key, client, record);
         } catch (photoError) {
           console.error(
             `Error processing photo ${photo.access_key}:`,

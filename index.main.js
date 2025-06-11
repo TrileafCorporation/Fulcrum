@@ -135,7 +135,7 @@ async function savePhotosProcess() {
         if (photos_check) {
           await downloadFulcrumPDF(record.id);
         }
-        await get_photos(`${record.id}`, look_up_array, client);
+        await get_photos(`${record.id}`, look_up_array, client, record);
 
         const photos = await getFilesInFolder("./app/util/photos", {
           onlyFiles: true,
