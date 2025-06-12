@@ -34,7 +34,7 @@ const writeStreamToFile = async (nodeStream, photoPath) => {
   });
 };
 
-const createRecord = async (accessKey, client, record) => {
+export const createLookupRecord = async (accessKey, client, record) => {
   const obj = {
     form_id: process.env.FULCRUM_FORM_LOOK_UP,
     latitude: 27.770787,
@@ -88,7 +88,8 @@ export const get_photos = async (record_id, look_up, client, record) => {
           await writeStreamToFile(nodeStream, photoFilename);
           console.log(`Photo saved: ${photoFilename}`);
 
-          await createRecord(photo.access_key, client, record);
+          // Lookup record will be created after the photo has been successfully
+          // copied to its final destination within index.main.js.
         } catch (photoError) {
           console.error(
             `Error processing photo ${photo.access_key}:`,

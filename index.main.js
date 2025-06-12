@@ -5,7 +5,7 @@ import fs from "fs";
 import path from "path";
 import cron from "node-cron";
 import { get_onedrive_folders } from "./app/app.js";
-import { get_photos } from "./app/util/get_photos.js";
+import { get_photos, createLookupRecord } from "./app/util/get_photos.js";
 import { clean_up_photos } from "./app/util/clean_up.js";
 import { copyImageToFolder } from "./app/util/put_file.js";
 import { getFilesInFolder } from "./app/util/get_photos_folder.js";
@@ -254,6 +254,23 @@ async function savePhotosProcess() {
               filename,
               fieldVisitNotes,
             });
+
+            // After successfully copying the photo, persist its access_key to the lookup form
+            const fileExt = path.extname(filename).toLowerCase();
+            if (fileExt === ".jpg" || fileExt === ".jpeg") {
+              const accessKey = path.parse(filename).name; // filename without extension
+              try {
+                await createLookupRecord(accessKey, client, record);
+              } catch (lookupErr) {
+                logger.warn("Failed to update lookup record", {
+                  action: "lookup_update_failure",
+                  recordId: record.id,
+                  projectNum,
+                  accessKey,
+                  error: lookupErr.message,
+                });
+              }
+            }
           } catch (copyError) {
             logger.fileUploadError(
               absolutePhotoPath,
