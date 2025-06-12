@@ -65,13 +65,24 @@ export async function copyImageToFolder(
 
     let newFileName = `${photo}${ext}`;
     let destinationPath = path.join(folderPath, newFileName);
-    let counter = 1;
 
-    while (await fileExists(destinationPath)) {
-      // Insert a suffix (e.g., (1), (2), etc.) before the file extension.
-      newFileName = `${photo}(${counter})${ext}`;
-      destinationPath = path.join(folderPath, newFileName);
-      counter++;
+    // Special handling for PDFs to prevent duplication
+    if (ext.includes("pdf")) {
+      // For PDFs, check if file already exists
+      if (await fileExists(destinationPath)) {
+        console.log(`PDF already exists at: ${destinationPath}`);
+        console.log("Skipping PDF copy to prevent duplication");
+        return destinationPath; // Return the existing file path
+      }
+    } else {
+      // For images, use the counter system as before
+      let counter = 1;
+      while (await fileExists(destinationPath)) {
+        // Insert a suffix (e.g., (1), (2), etc.) before the file extension.
+        newFileName = `${photo}(${counter})${ext}`;
+        destinationPath = path.join(folderPath, newFileName);
+        counter++;
+      }
     }
 
     await fs.copyFile(imagePath, destinationPath);

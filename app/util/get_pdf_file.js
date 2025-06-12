@@ -12,11 +12,12 @@ dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
 const filepath = path.resolve(__dirname, "./photos");
 
-export async function downloadFulcrumPDF(
-  reportId,
-  outputFile = `${filepath}/fulcrum_report.pdf`
-) {
+export async function downloadFulcrumPDF(reportId, outputFile = null) {
   try {
+    // Generate unique filename with record ID to prevent overwriting
+    const defaultOutputFile = `${filepath}/fulcrum_report_${reportId}.pdf`;
+    const finalOutputFile = outputFile || defaultOutputFile;
+
     const url = `https://api.fulcrumapp.com/run/8ef6ad42-669b-40fa-807d-f8bde7b3a898?record_id=${reportId}&token=${process.env.FULCRUM_TOKEN}`;
 
     const response = await fetch(url, {
@@ -31,12 +32,13 @@ export async function downloadFulcrumPDF(
 
     const nodeStream = Readable.fromWeb(response.body);
 
-    await pipeline(nodeStream, createWriteStream(outputFile));
+    await pipeline(nodeStream, createWriteStream(finalOutputFile));
 
-    console.log(`✅ PDF report downloaded: ${outputFile}`);
-    return outputFile;
+    console.log(`✅ PDF report downloaded: ${finalOutputFile}`);
+    return finalOutputFile;
   } catch (error) {
     console.error("❌ Error fetching PDF report:", error);
+    throw error;
   }
 }
 
