@@ -136,6 +136,81 @@ function getFieldDocsPhotosPath(branch, projectNumber) {
   return photosPath;
 }
 
+// Function to check if PDF already exists on file server
+function checkPDFExists(branch, projectNum, fieldVisitNotes) {
+  try {
+    const photosPath = getFieldDocsPhotosPath(branch, projectNum);
+    fieldVisitNotes = fieldVisitNotes ? fieldVisitNotes : "Project Report";
+    const pdfFileName = `Project #${projectNum}, ${fieldVisitNotes}.pdf`;
+    const pdfPath = path.join(photosPath, pdfFileName);
+
+    const exists = fs.existsSync(pdfPath);
+
+    logger.info("PDF existence check", {
+      action: "pdf_existence_check",
+      projectNum,
+      pdfPath,
+      exists,
+    });
+
+    return exists;
+  } catch (error) {
+    logger.error("Error checking PDF existence", error, {
+      action: "pdf_check_error",
+      projectNum,
+    });
+    return false; // If error, assume doesn't exist and allow download
+  }
+}
+
+// Optional: Function to clean up existing duplicate PDFs
+function cleanupDuplicatePDFs(branch, projectNum) {
+  try {
+    const photosPath = getFieldDocsPhotosPath(branch, projectNum);
+    const files = fs.readdirSync(photosPath);
+
+    // Find PDF files that have numbers in parentheses (duplicates)
+    const duplicatePDFs = files.filter((file) => {
+      return (
+        file.includes(".pdf") &&
+        /\(\d+\)/.test(file) &&
+        file.includes(`Project #${projectNum}`)
+      );
+    });
+
+    logger.info("Found duplicate PDFs to clean up", {
+      action: "duplicate_pdf_cleanup",
+      projectNum,
+      duplicateCount: duplicatePDFs.length,
+      duplicateFiles: duplicatePDFs,
+    });
+
+    // Remove duplicate PDFs
+    duplicatePDFs.forEach((file) => {
+      const filePath = path.join(photosPath, file);
+      try {
+        fs.unlinkSync(filePath);
+        logger.info("Removed duplicate PDF", {
+          action: "duplicate_pdf_removed",
+          projectNum,
+          removedFile: filePath,
+        });
+      } catch (error) {
+        logger.error("Failed to remove duplicate PDF", error, {
+          action: "duplicate_pdf_removal_failed",
+          projectNum,
+          filePath,
+        });
+      }
+    });
+  } catch (error) {
+    logger.error("Error during duplicate PDF cleanup", error, {
+      action: "duplicate_cleanup_error",
+      projectNum,
+    });
+  }
+}
+
 // Asynchronous function to handle the photo-saving process
 async function savePhotosProcess() {
   try {
@@ -185,6 +260,9 @@ async function savePhotosProcess() {
       }
 
       try {
+        // Clean up any existing duplicate PDFs first
+        cleanupDuplicatePDFs(branch, projectNum);
+
         const look_up_array = await get_photo_ids(client);
         const photos_check = await check_for_new_photos(
           record.id,
@@ -201,12 +279,30 @@ async function savePhotosProcess() {
         });
 
         if (photos_check) {
-          logger.info("Downloading PDF for record", {
-            action: "pdf_download_start",
-            recordId: record.id,
+          // Check if PDF already exists on file server before downloading
+          const pdfExists = checkPDFExists(
+            branch,
             projectNum,
-          });
-          await downloadFulcrumPDF(record.id);
+            record.form_values["638f"]
+          );
+
+          if (!pdfExists) {
+            logger.info("Downloading PDF for record", {
+              action: "pdf_download_start",
+              recordId: record.id,
+              projectNum,
+            });
+            await downloadFulcrumPDF(record.id);
+          } else {
+            logger.info(
+              "PDF already exists on file server, skipping download",
+              {
+                action: "pdf_download_skipped",
+                recordId: record.id,
+                projectNum,
+              }
+            );
+          }
         }
 
         await get_photos(`${record.id}`, look_up_array, client, record);
