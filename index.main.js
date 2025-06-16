@@ -164,49 +164,81 @@ function checkPDFExists(branch, projectNum, fieldVisitNotes) {
 }
 
 // Optional: Function to clean up existing duplicate PDFs
-function cleanupDuplicatePDFs(branch, projectNum) {
+async function cleanupDuplicatePDFs(branch, projectNum) {
+  const timeout = 30000; // 30 second timeout
+
   try {
-    const photosPath = getFieldDocsPhotosPath(branch, projectNum);
-    const files = fs.readdirSync(photosPath);
+    // Wrap the entire operation in a timeout
+    await Promise.race([
+      new Promise(async (resolve, reject) => {
+        try {
+          const photosPath = getFieldDocsPhotosPath(branch, projectNum);
 
-    // Find PDF files that have numbers in parentheses (duplicates)
-    const duplicatePDFs = files.filter((file) => {
-      return (
-        file.includes(".pdf") &&
-        /\(\d+\)/.test(file) &&
-        file.includes(`Project #${projectNum}`)
-      );
-    });
+          // Use fs.promises for async operations
+          const files = await fs.promises.readdir(photosPath);
 
-    logger.info("Found duplicate PDFs to clean up", {
-      action: "duplicate_pdf_cleanup",
-      projectNum,
-      duplicateCount: duplicatePDFs.length,
-      duplicateFiles: duplicatePDFs,
-    });
+          // Find PDF files that have numbers in parentheses (duplicates)
+          const duplicatePDFs = files.filter((file) => {
+            return (
+              file.includes(".pdf") &&
+              /\(\d+\)/.test(file) &&
+              file.includes(`Project #${projectNum}`)
+            );
+          });
 
-    // Remove duplicate PDFs
-    duplicatePDFs.forEach((file) => {
-      const filePath = path.join(photosPath, file);
-      try {
-        fs.unlinkSync(filePath);
-        logger.info("Removed duplicate PDF", {
-          action: "duplicate_pdf_removed",
-          projectNum,
-          removedFile: filePath,
-        });
-      } catch (error) {
-        logger.error("Failed to remove duplicate PDF", error, {
-          action: "duplicate_pdf_removal_failed",
-          projectNum,
-          filePath,
-        });
-      }
-    });
+          logger.info("Found duplicate PDFs to clean up", {
+            action: "duplicate_pdf_cleanup",
+            projectNum,
+            duplicateCount: duplicatePDFs.length,
+            duplicateFiles: duplicatePDFs,
+          });
+
+          // Remove duplicate PDFs with individual timeouts
+          for (const file of duplicatePDFs) {
+            const filePath = path.join(photosPath, file);
+            try {
+              // Add timeout for each file deletion
+              await Promise.race([
+                fs.promises.unlink(filePath),
+                new Promise((_, reject) =>
+                  setTimeout(
+                    () => reject(new Error("File deletion timeout")),
+                    10000
+                  )
+                ),
+              ]);
+
+              logger.info("Removed duplicate PDF", {
+                action: "duplicate_pdf_removed",
+                projectNum,
+                removedFile: filePath,
+              });
+            } catch (error) {
+              logger.error("Failed to remove duplicate PDF", error, {
+                action: "duplicate_pdf_removal_failed",
+                projectNum,
+                filePath,
+              });
+              // Continue with other files even if one fails
+            }
+          }
+          resolve();
+        } catch (error) {
+          reject(error);
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Cleanup operation timeout")),
+          timeout
+        )
+      ),
+    ]);
   } catch (error) {
     logger.error("Error during duplicate PDF cleanup", error, {
       action: "duplicate_cleanup_error",
       projectNum,
+      timeout: timeout,
     });
   }
 }
@@ -237,9 +269,10 @@ async function savePhotosProcess() {
     for (const record of records.objects) {
       // Project # 1234
       // Comment out when testing is done
-      // if (record.id != "a2c03deb-5475-4dea-8e49-0b0faba1d7f3") {
-      //   continue;
-      // }
+      if (record.id != "20503860-7f7a-45f0-acad-db1d7a63b382") {
+        continue;
+      }
+      console.log(record.id);
 
       let photo_array = extractPhotoObjects(record);
       let status = record.status;
@@ -261,7 +294,7 @@ async function savePhotosProcess() {
 
       try {
         // Clean up any existing duplicate PDFs first
-        cleanupDuplicatePDFs(branch, projectNum);
+        await cleanupDuplicatePDFs(branch, projectNum);
 
         const look_up_array = await get_photo_ids(client);
         const photos_check = await check_for_new_photos(
@@ -472,17 +505,52 @@ cron.schedule("*/30 * * * *", async () => {
   }
 });
 
+// Memory monitoring function
+function monitorMemory() {
+  const memUsage = process.memoryUsage();
+  const memUsageMB = {
+    rss: Math.round(memUsage.rss / 1024 / 1024),
+    heapUsed: Math.round(memUsage.heapUsed / 1024 / 1024),
+    heapTotal: Math.round(memUsage.heapTotal / 1024 / 1024),
+    external: Math.round(memUsage.external / 1024 / 1024),
+  };
+
+  // Log warning if memory usage is high
+  if (memUsageMB.rss > 150) {
+    logger.warn("High memory usage detected", {
+      action: "memory_warning",
+      memoryUsage: memUsageMB,
+      uptime: Math.round(process.uptime()) + "s",
+    });
+  }
+
+  // Force garbage collection if available and memory is very high
+  if (memUsageMB.rss > 180 && global.gc) {
+    logger.info("Forcing garbage collection", {
+      action: "gc_forced",
+      memoryBefore: memUsageMB,
+    });
+    global.gc();
+  }
+}
+
+// Monitor memory every 5 minutes
+setInterval(monitorMemory, 5 * 60 * 1000);
+
 // Health check endpoint with system metrics
 app.get("/health", (req, res) => {
   logger.systemHealth();
 
+  const memUsage = process.memoryUsage();
   res.json({
     status: "healthy",
     timestamp: new Date().toISOString(),
     uptime: Math.round(process.uptime()) + "s",
     memory: {
-      rss: Math.round(process.memoryUsage().rss / 1024 / 1024) + "MB",
-      heapUsed: Math.round(process.memoryUsage().heapUsed / 1024 / 1024) + "MB",
+      rss: Math.round(memUsage.rss / 1024 / 1024) + "MB",
+      heapUsed: Math.round(memUsage.heapUsed / 1024 / 1024) + "MB",
+      heapTotal: Math.round(memUsage.heapTotal / 1024 / 1024) + "MB",
+      external: Math.round(memUsage.external / 1024 / 1024) + "MB",
     },
   });
 });
