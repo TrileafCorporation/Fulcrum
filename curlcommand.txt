@@ -7,3 +7,9 @@ pm2 stop index.main.js
 node index.main.js
 
 pm2 ls
+
+npm run logs:report
+npm run logs:errors
+npm run logs:performance
+npm run logs:uploads
+npm run logs:tail
