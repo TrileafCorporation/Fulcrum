@@ -3,6 +3,7 @@ Invoke-WebRequest -Uri "http://localhost:3000/savephotos" -Method POST
 
 pm2 start index.main.js
 pm2 stop index.main.js
+pm2 start ecosystem.config.cjs
 
 node index.main.js
 
