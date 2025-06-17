@@ -294,7 +294,8 @@ async function savePhotosProcess() {
 
       try {
         // Clean up any existing duplicate PDFs first
-        await cleanupDuplicatePDFs(branch, projectNum);
+        // Uncomment if this functionality is needed in the future!
+        // await cleanupDuplicatePDFs(branch, projectNum);
 
         const look_up_array = await get_photo_ids(client);
         const photos_check = await check_for_new_photos(
