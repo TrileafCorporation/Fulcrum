@@ -19,7 +19,8 @@ export async function copyImageToFolder(
   photo_array,
   secondary_folder_name,
   projectNum,
-  fieldVisitNotes
+  fieldVisitNotes,
+  allowDuplicates = false
 ) {
   try {
     console.log("Source:", imagePath);
@@ -75,13 +76,21 @@ export async function copyImageToFolder(
         return destinationPath; // Return the existing file path
       }
     } else {
-      // For images, use the counter system as before
-      let counter = 1;
-      while (await fileExists(destinationPath)) {
-        // Insert a suffix (e.g., (1), (2), etc.) before the file extension.
-        newFileName = `${photo}(${counter})${ext}`;
-        destinationPath = path.join(folderPath, newFileName);
-        counter++;
+      // For images, check allowDuplicates parameter
+      if (await fileExists(destinationPath)) {
+        if (!allowDuplicates) {
+          console.log(`Image already exists at: ${destinationPath}`);
+          console.log("Skipping image copy to prevent duplication");
+          return destinationPath; // Return the existing file path
+        } else {
+          // Create numbered duplicates if allowDuplicates is true
+          let counter = 1;
+          while (await fileExists(destinationPath)) {
+            newFileName = `${photo}(${counter})${ext}`;
+            destinationPath = path.join(folderPath, newFileName);
+            counter++;
+          }
+        }
       }
     }
 
