@@ -35,6 +35,24 @@ const writeStreamToFile = async (nodeStream, photoPath) => {
 };
 
 export const createLookupRecord = async (accessKey, client, record) => {
+  // First check if a lookup record already exists for this access_key
+  try {
+    const existingRecords = await client.records.all({
+      form_id: process.env.FULCRUM_FORM_LOOK_UP,
+      q: `field_2426:"${accessKey}"`,
+    });
+
+    if (existingRecords.objects.length > 0) {
+      console.log(`Lookup record already exists for access_key: ${accessKey}`);
+      return existingRecords.objects[0];
+    }
+  } catch (searchError) {
+    console.warn(
+      `Warning: Could not search for existing lookup record: ${searchError.message}`
+    );
+    // Continue with creation attempt
+  }
+
   const obj = {
     form_id: process.env.FULCRUM_FORM_LOOK_UP,
     latitude: 27.770787,
@@ -46,13 +64,18 @@ export const createLookupRecord = async (accessKey, client, record) => {
   };
 
   try {
-    const record = await client.records.create(obj);
-    console.log(`${record.id} has been created!`);
+    const lookupRecord = await client.records.create(obj);
+    console.log(
+      `Lookup record ${lookupRecord.id} has been created for access_key: ${accessKey}`
+    );
+    return lookupRecord;
   } catch (error) {
     console.error(
       `Error creating record for access_key ${accessKey}:`,
       error.message
     );
+    // Re-throw the error so it can be handled by the calling function
+    throw error;
   }
 };
 

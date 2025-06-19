@@ -385,20 +385,28 @@ async function savePhotosProcess() {
               fieldVisitNotes,
             });
 
-            // After successfully copying the photo, persist its access_key to the lookup form
+            // After successfully copying (or skipping) the photo, persist its access_key to the lookup form
             const fileExt = path.extname(filename).toLowerCase();
             if (fileExt === ".jpg" || fileExt === ".jpeg") {
               const accessKey = path.parse(filename).name; // filename without extension
               try {
                 await createLookupRecord(accessKey, client, record);
+                logger.info("Lookup record created successfully", {
+                  action: "lookup_record_created",
+                  recordId: record.id,
+                  projectNum,
+                  accessKey,
+                });
               } catch (lookupErr) {
-                logger.warn("Failed to update lookup record", {
+                logger.error("Failed to create lookup record", {
                   action: "lookup_update_failure",
                   recordId: record.id,
                   projectNum,
                   accessKey,
                   error: lookupErr.message,
                 });
+                // Re-throw the error to prevent endless processing
+                throw lookupErr;
               }
             }
           } catch (copyError) {
