@@ -111,6 +111,33 @@ export const get_photos = async (record_id, look_up, client, record) => {
           await writeStreamToFile(nodeStream, photoFilename);
           console.log(`Photo saved: ${photoFilename}`);
 
+          // Verify the file was actually written and has content
+          try {
+            const stats = await fs.promises.stat(photoFilename);
+            if (stats.size === 0) {
+              throw new Error("Downloaded photo file is empty");
+            }
+            console.log(
+              `Photo verified: ${photoFilename} (${stats.size} bytes)`
+            );
+          } catch (statError) {
+            console.error(
+              `Error verifying downloaded photo: ${statError.message}`
+            );
+            // Try to clean up the empty file
+            try {
+              await fs.promises.unlink(photoFilename);
+              console.log(`Cleaned up empty photo file: ${photoFilename}`);
+            } catch (unlinkError) {
+              console.error(
+                `Failed to clean up empty photo file: ${unlinkError.message}`
+              );
+            }
+            throw new Error(
+              `Photo download verification failed: ${statError.message}`
+            );
+          }
+
           // Lookup record will be created after the photo has been successfully
           // copied to its final destination within index.main.js.
         } catch (photoError) {
@@ -118,6 +145,7 @@ export const get_photos = async (record_id, look_up, client, record) => {
             `Error processing photo ${photo.access_key}:`,
             photoError.message
           );
+          // Don't re-throw here to allow other photos to continue processing
         }
       } else {
         console.log(

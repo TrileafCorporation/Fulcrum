@@ -341,6 +341,9 @@ async function savePhotosProcess() {
 
         await get_photos(`${record.id}`, look_up_array, client, record);
 
+        // Add a small delay to ensure file operations are complete
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
         const photos = await getFilesInFolder("./app/util/photos", {
           onlyFiles: true,
         });
@@ -360,6 +363,18 @@ async function savePhotosProcess() {
           const absolutePhotoPath = path.resolve("./app/util/photos", filename);
           const newPhotoFolder = getFieldDocsPhotosPath(branch, projectNum);
           const secondary_folder_name = `${projectNum}`;
+
+          // Verify the source file exists before attempting to process it
+          if (!fs.existsSync(absolutePhotoPath)) {
+            logger.warn("Source photo file does not exist, skipping", {
+              action: "source_file_missing",
+              recordId: record.id,
+              projectNum,
+              filename,
+              absolutePhotoPath,
+            });
+            continue;
+          }
 
           logger.fileUploadStart(absolutePhotoPath, newPhotoFolder, {
             recordId: record.id,
@@ -420,11 +435,29 @@ async function savePhotosProcess() {
                 filename,
               }
             );
-            throw copyError;
+            // Don't throw the error immediately, log it and continue with other photos
+            // This prevents one bad photo from stopping the entire process
+            logger.warn("Continuing with remaining photos after copy error", {
+              action: "copy_error_continue",
+              recordId: record.id,
+              projectNum,
+              filename,
+              error: copyError.message,
+            });
           }
         }
 
-        await clean_up_photos("./app/util/photos");
+        // Only clean up photos after ALL photos for this record have been processed
+        try {
+          await clean_up_photos("./app/util/photos");
+        } catch (cleanupError) {
+          logger.warn("Error during photo cleanup, continuing", {
+            action: "cleanup_error",
+            recordId: record.id,
+            projectNum,
+            error: cleanupError.message,
+          });
+        }
 
         logger.recordComplete(record.id, projectNum, {
           photosProcessed: photos.length,

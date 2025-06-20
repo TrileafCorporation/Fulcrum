@@ -26,6 +26,14 @@ export async function copyImageToFolder(
     console.log("Source:", imagePath);
     console.log("Destination Folder (requested):", folderPath);
 
+    // First, check if the source file exists
+    if (!(await fileExists(imagePath))) {
+      const error = new Error(`Source file does not exist: ${imagePath}`);
+      error.code = "ENOENT_SOURCE";
+      console.error("Source file missing:", error.message);
+      throw error;
+    }
+
     try {
       await fs.access(folderPath);
       console.log(`Destination folder exists at: ${folderPath}`);
@@ -44,8 +52,17 @@ export async function copyImageToFolder(
         await fs.access(folderPath);
         console.log(`Alternate destination folder exists at: ${folderPath}`);
       } catch (_) {
-        await fs.mkdir(folderPath, { recursive: true });
-        console.log(`Alternate destination folder created at: ${folderPath}`);
+        try {
+          await fs.mkdir(folderPath, { recursive: true });
+          console.log(`Alternate destination folder created at: ${folderPath}`);
+        } catch (mkdirError) {
+          const error = new Error(
+            `Failed to create destination folder: ${folderPath}. Error: ${mkdirError.message}`
+          );
+          error.code = "MKDIR_FAILED";
+          console.error("Failed to create destination folder:", error.message);
+          throw error;
+        }
       }
     }
 
@@ -94,11 +111,27 @@ export async function copyImageToFolder(
       }
     }
 
+    // Verify source file still exists before copying (in case it was deleted between checks)
+    if (!(await fileExists(imagePath))) {
+      const error = new Error(
+        `Source file was removed before copy operation: ${imagePath}`
+      );
+      error.code = "ENOENT_SOURCE_DURING_COPY";
+      console.error("Source file missing during copy:", error.message);
+      throw error;
+    }
+
     await fs.copyFile(imagePath, destinationPath);
     console.log(`File copied successfully to: ${destinationPath}`);
     return destinationPath;
   } catch (error) {
     console.error("Error copying file:", error);
+
+    // Add more context to the error
+    if (error.code === "ENOENT") {
+      error.message = `File operation failed - ${error.message}. Source: ${imagePath}, Destination: ${folderPath}`;
+    }
+
     throw error;
   }
 }
