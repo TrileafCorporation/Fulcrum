@@ -53,8 +53,7 @@ function getFieldDocsPhotosPath(branch, projectNumber) {
     projectNumber,
   });
 
-  // let filePath = "\\\\trileaf.local\\Project_Folders";
-  let filePath = process.env.FILE_PATH;
+  let filePath = process.env.FILE_PATH || "\\\\trileaf.local\\Project_Folders";
 
   const basePath = path.join(filePath, branch);
   if (!fs.existsSync(basePath)) {
@@ -251,7 +250,7 @@ async function savePhotosProcess() {
 
     // Only fetch records updated in the last 7 days to avoid processing old projects
     const daysAgo = new Date();
-    daysAgo.setDate(daysAgo.getDate() - process.env.DAYS_AGO);
+    daysAgo.setDate(daysAgo.getDate() - (process.env.DAYS_AGO || 7));
 
     const records = await client.records.all({
       form_id: `${process.env.FULCRUM_FORM_ID}`,
