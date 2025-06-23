@@ -53,7 +53,8 @@ function getFieldDocsPhotosPath(branch, projectNumber) {
     projectNumber,
   });
 
-  let filePath = "\\\\trileaf.local\\Project_Folders";
+  // let filePath = "\\\\trileaf.local\\Project_Folders";
+  let filePath = process.env.FILE_PATH;
 
   const basePath = path.join(filePath, branch);
   if (!fs.existsSync(basePath)) {
@@ -249,12 +250,12 @@ async function savePhotosProcess() {
     logger.processStart(0); // Will be updated with actual count
 
     // Only fetch records updated in the last 7 days to avoid processing old projects
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const daysAgo = new Date();
+    daysAgo.setDate(daysAgo.getDate() - process.env.DAYS_AGO);
 
     const records = await client.records.all({
       form_id: `${process.env.FULCRUM_FORM_ID}`,
-      updated_since: sevenDaysAgo.toISOString(),
+      updated_since: daysAgo.toISOString(),
     });
 
     logger.info("Fetched records from Fulcrum", {

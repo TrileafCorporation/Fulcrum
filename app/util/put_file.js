@@ -40,8 +40,10 @@ export async function copyImageToFolder(
     } catch (err) {
       // folderPath doesn't exist.
       // Use the UNC base folder instead.
-      const uncBase =
-        "\\\\trileaf.local\\Project_Folders\\Shared\\Tech\\Fulcrum\\RecoveredUploads";
+      // const uncBase = "\\\\trileaf.local\\Project_Folders\\Shared\\Tech\\Fulcrum\\RecoveredUploads";
+      
+      // const uncBase = process.env.FILE_PATH + "\\Shared\\Tech\\Fulcrum\\RecoveredUploads";
+      const uncBase = path.join(process.env.FILE_PATH, "Shared", "Tech", "Fulcrum", "RecoveredUploads");
 
       folderPath = path.join(uncBase, secondary_folder_name);
       console.log(
@@ -68,9 +70,9 @@ export async function copyImageToFolder(
 
     let { name, ext } = path.parse(imagePath);
     let photoObj = photo_array.find((photo) => photo.photo_id === name);
-    console.log({ photo_array });
-    console.log({ name });
-    console.log({ photoObj });
+    // console.log({ photo_array });
+    // console.log({ name });
+    // console.log({ photoObj });
 
     let photo = photoObj?.caption
       ? photoObj.caption
