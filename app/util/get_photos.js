@@ -37,15 +37,15 @@ const writeStreamToFile = async (nodeStream, photoPath) => {
 export const createLookupRecord = async (accessKey, client, record) => {
   // First check if a lookup record already exists for this access_key
   try {
-    const existingRecords = await client.records.all({
-      form_id: process.env.FULCRUM_FORM_LOOK_UP,
-      q: `field_2426:"${accessKey}"`,
-    });
+    // const existingRecords = await client.records.all({
+    //   form_id: process.env.FULCRUM_FORM_LOOK_UP,
+    //   // q: `field_2426:"${accessKey}"`,
+    // });
 
-    if (existingRecords.objects.length > 0) {
-      console.log(`Lookup record already exists for access_key: ${accessKey}`);
-      return existingRecords.objects[0];
-    }
+    // if (existingRecords.objects.length > 0) {
+    //   console.log(`Lookup record already exists for access_key: ${accessKey}`);
+    //   return existingRecords.objects[0];
+    // }
   } catch (searchError) {
     console.warn(
       `Warning: Could not search for existing lookup record: ${searchError.message}`
@@ -60,6 +60,7 @@ export const createLookupRecord = async (accessKey, client, record) => {
     form_values: {
       2426: accessKey,
       cb30: record.form_values["bfd0"],
+      "7bc8": record.id
     },
   };
 
@@ -79,7 +80,7 @@ export const createLookupRecord = async (accessKey, client, record) => {
   }
 };
 
-export const get_photos = async (record_id, look_up, client, record) => {
+export const get_photos = async (record_id, look_up, client) => {
   await ensurePhotosDirectory();
 
   try {

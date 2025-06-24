@@ -4,14 +4,12 @@ import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
 import cron from "node-cron";
-import { get_onedrive_folders } from "./app/app.js";
 import { get_photos, createLookupRecord } from "./app/util/get_photos.js";
 import { clean_up_photos } from "./app/util/clean_up.js";
 import { copyImageToFolder } from "./app/util/put_file.js";
 import { getFilesInFolder } from "./app/util/get_photos_folder.js";
 import { get_photo_ids } from "./app/util/get_photo_ids.js";
 import { downloadFulcrumPDF } from "./app/util/get_pdf_file.js";
-import { check_for_new_photos } from "./app/util/get_photos_check.js";
 import logger from "./app/logging/AdvancedLogger.js";
 
 dotenv.config();
@@ -297,46 +295,31 @@ async function savePhotosProcess() {
         // Uncomment if this functionality is needed in the future!
         // await cleanupDuplicatePDFs(branch, projectNum);
 
-        const look_up_array = await get_photo_ids(client);
-        const photos_check = await check_for_new_photos(
-          record.id,
-          look_up_array,
-          client
+        const look_up_array = await get_photo_ids(client, record.id);
+  
+          // Check if PDF already exists on file server before downloading
+        const pdfExists = checkPDFExists(
+          branch,
+          projectNum,
+          record.form_values["638f"]
         );
 
-        logger.info("Checked for new photos", {
-          action: "photos_check",
-          recordId: record.id,
-          projectNum,
-          hasNewPhotos: photos_check,
-          lookupCount: look_up_array.length,
-        });
-
-        if (photos_check) {
-          // Check if PDF already exists on file server before downloading
-          const pdfExists = checkPDFExists(
-            branch,
+        if (!pdfExists) {
+          logger.info("Downloading PDF for record", {
+            action: "pdf_download_start",
+            recordId: record.id,
             projectNum,
-            record.form_values["638f"]
-          );
-
-          if (!pdfExists) {
-            logger.info("Downloading PDF for record", {
-              action: "pdf_download_start",
+          });
+          await downloadFulcrumPDF(record.id);
+        } else {
+          logger.info(
+            "PDF already exists on file server, skipping download",
+            {
+              action: "pdf_download_skipped",
               recordId: record.id,
               projectNum,
-            });
-            await downloadFulcrumPDF(record.id);
-          } else {
-            logger.info(
-              "PDF already exists on file server, skipping download",
-              {
-                action: "pdf_download_skipped",
-                recordId: record.id,
-                projectNum,
-              }
-            );
-          }
+            }
+          );
         }
 
         await get_photos(`${record.id}`, look_up_array, client, record);
