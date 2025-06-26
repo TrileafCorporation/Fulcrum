@@ -68,8 +68,10 @@ export const get_photos = async (record_id, look_up, client) => {
 
   try {
     const page = await client.photos.all({
-      form_id: process.env.FULCRUM_FORM_ID,
       record_id: record_id,
+      processed: true,
+      stored: true,
+      uploaded: true
     });
    
     const photoPromises = page.objects.map(async (photo) => {
