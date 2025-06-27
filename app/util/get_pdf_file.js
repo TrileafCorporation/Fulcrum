@@ -19,7 +19,7 @@ export async function downloadFulcrumPDF(reportId, outputFile = null) {
     const defaultOutputFile = `${filepath}/fulcrum_report_${reportId}.pdf`;
     const finalOutputFile = outputFile || defaultOutputFile;
 
-    const url = `https://api.fulcrumapp.com/run/8ef6ad42-669b-40fa-807d-f8bde7b3a898?record_id=${reportId}&token=${process.env.FULCRUM_TOKEN}`;
+    const url = `https://api.fulcrumapp.com/run/8ef6ad42-669b-40fa-807d-f8bde7b3a898?record_id=${reportId}`;
 
     const response = await fetch(url, {
       headers: { "X-ApiToken": process.env.FULCRUM_TOKEN },
