@@ -2,7 +2,7 @@ import { promises as fs } from "fs";
 import path from "path";
 
 const sanitizeFileName = (filename) =>
-  filename.replace(/[\n\r\\/:<>"|?*]+/g, "-").trim();
+  filename.replace(/[\n\r\\/:<>"|?*]+/g, "-")?.trim()?.slice(0, 200);
 
 async function fileExists(filePath) {
   try {
