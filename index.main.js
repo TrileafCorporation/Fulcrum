@@ -52,9 +52,10 @@ function getFieldDocsPhotosPath(branch, projectNumber) {
   });
 
   let directoryCreationNeeded = false;
-  let filePath = process.env.FILE_PATH || "\\\\trileaf.local\\Project_Folders";
+  let filePath = process.env.FILE_PATH || "\\trileaf.local\\Project_Folders";
 
   const basePath = path.join(filePath, branch);
+
   if (!fs.existsSync(basePath)) {
     logger.warn("Branch directory does not exist, using fallback path", {
       action: "path_fallback",
@@ -82,15 +83,17 @@ function getFieldDocsPhotosPath(branch, projectNumber) {
   }
 
   if (directoryCreationNeeded) {
-    const dirPath = path.join(
-      filePath,
-      "Shared",
-      "Tech",
-      "Fulcrum",
-      "RecoveredUploads",
-      projectNumber
-    ) || "\\\\trileaf.local\\Project_Folders\\Shared\\Tech\\Fulcrum\\RecoveredUploads\\" + projectNumber;
-
+    const dirPath =
+      path.join(
+        filePath,
+        "Shared",
+        "Tech",
+        "Fulcrum",
+        "RecoveredUploads",
+        projectNumber
+      ) ||
+      "\\trileaf.local\\Project_Folders\\Shared\\Tech\\Fulcrum\\RecoveredUploads\\" +
+        projectNumber;
     // Create the directory if it doesn't exist
     fs.mkdirSync(dirPath, { recursive: true });
     return dirPath;
@@ -254,7 +257,6 @@ async function savePhotosProcess() {
     logger.processStart(records.objects.length);
 
     for (const record of records.objects) {
-
       let photo_array = extractPhotoObjects(record);
       let status = record.status;
       let projectNum = record.form_values["bfd0"];
@@ -279,9 +281,9 @@ async function savePhotosProcess() {
         // await cleanupDuplicatePDFs(branch, projectNum);
 
         const look_up_array = await get_photo_ids(client, record.id);
-        
+
         await downloadFulcrumPDF(record.id);
-        
+
         await get_photos(`${record.id}`, look_up_array, client, record);
 
         const photos = await getFilesInFolder("./app/util/photos", {
@@ -296,13 +298,13 @@ async function savePhotosProcess() {
           photoPaths: photos.map((p) => path.basename(p)),
         });
 
-        for (const relativePhotoPath of photos) {
-          let fieldVisitNotes = record.form_values["638f"];
+        const newPhotoFolder = getFieldDocsPhotosPath(branch, projectNum);
+        let fieldVisitNotes = record.form_values["638f"];
 
+        for (const relativePhotoPath of photos) {
           const filename = path.basename(relativePhotoPath);
           const absolutePhotoPath = path.resolve("./app/util/photos", filename);
-          const newPhotoFolder = getFieldDocsPhotosPath(branch, projectNum);
-          
+
           // Verify the source file exists before attempting to process it
           if (!fs.existsSync(absolutePhotoPath)) {
             logger.warn("Source photo file does not exist, skipping", {
