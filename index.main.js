@@ -11,7 +11,6 @@ import { getFilesInFolder } from "./app/util/get_photos_folder.js";
 import { get_photo_ids } from "./app/util/get_photo_ids.js";
 import { downloadFulcrumPDF } from "./app/util/get_pdf_file.js";
 import logger from "./app/logging/AdvancedLogger.js";
-import { dir } from "console";
 
 dotenv.config();
 

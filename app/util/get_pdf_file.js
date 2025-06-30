@@ -4,7 +4,6 @@ import { Readable } from "stream";
 import { fileURLToPath } from "url";
 import path from "path";
 import dotenv from "dotenv";
-import { start } from "repl";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
