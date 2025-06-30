@@ -4,14 +4,12 @@ import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
 import cron from "node-cron";
-import { get_onedrive_folders } from "./app/app.js";
 import { get_photos, createLookupRecord } from "./app/util/get_photos.js";
 import { clean_up_photos } from "./app/util/clean_up.js";
 import { copyImageToFolder } from "./app/util/put_file.js";
 import { getFilesInFolder } from "./app/util/get_photos_folder.js";
 import { get_photo_ids } from "./app/util/get_photo_ids.js";
 import { downloadFulcrumPDF } from "./app/util/get_pdf_file.js";
-import { check_for_new_photos } from "./app/util/get_photos_check.js";
 import logger from "./app/logging/AdvancedLogger.js";
 
 dotenv.config();
@@ -53,9 +51,11 @@ function getFieldDocsPhotosPath(branch, projectNumber) {
     projectNumber,
   });
 
-  let filePath = "\\\\trileaf.local\\Project_Folders";
+  let directoryCreationNeeded = false;
+  let filePath = process.env.FILE_PATH || "\\trileaf.local\\Project_Folders";
 
   const basePath = path.join(filePath, branch);
+
   if (!fs.existsSync(basePath)) {
     logger.warn("Branch directory does not exist, using fallback path", {
       action: "path_fallback",
@@ -64,7 +64,7 @@ function getFieldDocsPhotosPath(branch, projectNumber) {
       branch,
       projectNumber,
     });
-    return path.join(filePath, "unexciting");
+    directoryCreationNeeded = true;
   }
 
   const items = fs.readdirSync(basePath, { withFileTypes: true });
@@ -79,7 +79,24 @@ function getFieldDocsPhotosPath(branch, projectNumber) {
       basePath,
       fallbackPath: path.join(filePath, "unexciting"),
     });
-    return path.join(filePath, "unexciting");
+    directoryCreationNeeded = true;
+  }
+
+  if (directoryCreationNeeded) {
+    const dirPath =
+      path.join(
+        filePath,
+        "Shared",
+        "Tech",
+        "Fulcrum",
+        "RecoveredUploads",
+        projectNumber
+      ) ||
+      "\\trileaf.local\\Project_Folders\\Shared\\Tech\\Fulcrum\\RecoveredUploads\\" +
+        projectNumber;
+    // Create the directory if it doesn't exist
+    fs.mkdirSync(dirPath, { recursive: true });
+    return dirPath;
   }
 
   const projectPath = path.join(basePath, projectDirEntry.name);
@@ -134,33 +151,6 @@ function getFieldDocsPhotosPath(branch, projectNumber) {
   });
 
   return photosPath;
-}
-
-// Function to check if PDF already exists on file server
-function checkPDFExists(branch, projectNum, fieldVisitNotes) {
-  try {
-    const photosPath = getFieldDocsPhotosPath(branch, projectNum);
-    fieldVisitNotes = fieldVisitNotes ? fieldVisitNotes : "Project Report";
-    const pdfFileName = `Project #${projectNum}, ${fieldVisitNotes}.pdf`;
-    const pdfPath = path.join(photosPath, pdfFileName);
-
-    const exists = fs.existsSync(pdfPath);
-
-    logger.info("PDF existence check", {
-      action: "pdf_existence_check",
-      projectNum,
-      pdfPath,
-      exists,
-    });
-
-    return exists;
-  } catch (error) {
-    logger.error("Error checking PDF existence", error, {
-      action: "pdf_check_error",
-      projectNum,
-    });
-    return false; // If error, assume doesn't exist and allow download
-  }
 }
 
 // Optional: Function to clean up existing duplicate PDFs
@@ -249,12 +239,12 @@ async function savePhotosProcess() {
     logger.processStart(0); // Will be updated with actual count
 
     // Only fetch records updated in the last 7 days to avoid processing old projects
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const daysAgo = new Date();
+    daysAgo.setDate(daysAgo.getDate() - (process.env.DAYS_AGO || 7));
 
     const records = await client.records.all({
       form_id: `${process.env.FULCRUM_FORM_ID}`,
-      updated_since: sevenDaysAgo.toISOString(),
+      updated_since: daysAgo.toISOString(),
     });
 
     logger.info("Fetched records from Fulcrum", {
@@ -267,13 +257,6 @@ async function savePhotosProcess() {
     logger.processStart(records.objects.length);
 
     for (const record of records.objects) {
-      // Project # 1234
-      // Comment out when testing is done
-      // if (record.id != "20503860-7f7a-45f0-acad-db1d7a63b382") {
-      //   continue;
-      // }
-      console.log(record.id);
-
       let photo_array = extractPhotoObjects(record);
       let status = record.status;
       let projectNum = record.form_values["bfd0"];
@@ -297,52 +280,11 @@ async function savePhotosProcess() {
         // Uncomment if this functionality is needed in the future!
         // await cleanupDuplicatePDFs(branch, projectNum);
 
-        const look_up_array = await get_photo_ids(client);
-        const photos_check = await check_for_new_photos(
-          record.id,
-          look_up_array,
-          client
-        );
+        const look_up_array = await get_photo_ids(client, record.id);
 
-        logger.info("Checked for new photos", {
-          action: "photos_check",
-          recordId: record.id,
-          projectNum,
-          hasNewPhotos: photos_check,
-          lookupCount: look_up_array.length,
-        });
-
-        if (photos_check) {
-          // Check if PDF already exists on file server before downloading
-          const pdfExists = checkPDFExists(
-            branch,
-            projectNum,
-            record.form_values["638f"]
-          );
-
-          if (!pdfExists) {
-            logger.info("Downloading PDF for record", {
-              action: "pdf_download_start",
-              recordId: record.id,
-              projectNum,
-            });
-            await downloadFulcrumPDF(record.id);
-          } else {
-            logger.info(
-              "PDF already exists on file server, skipping download",
-              {
-                action: "pdf_download_skipped",
-                recordId: record.id,
-                projectNum,
-              }
-            );
-          }
-        }
+        await downloadFulcrumPDF(record.id);
 
         await get_photos(`${record.id}`, look_up_array, client, record);
-
-        // Add a small delay to ensure file operations are complete
-        await new Promise((resolve) => setTimeout(resolve, 1000));
 
         const photos = await getFilesInFolder("./app/util/photos", {
           onlyFiles: true,
@@ -356,13 +298,12 @@ async function savePhotosProcess() {
           photoPaths: photos.map((p) => path.basename(p)),
         });
 
-        for (const relativePhotoPath of photos) {
-          let fieldVisitNotes = record.form_values["638f"];
+        const newPhotoFolder = getFieldDocsPhotosPath(branch, projectNum);
+        let fieldVisitNotes = record.form_values["638f"];
 
+        for (const relativePhotoPath of photos) {
           const filename = path.basename(relativePhotoPath);
           const absolutePhotoPath = path.resolve("./app/util/photos", filename);
-          const newPhotoFolder = getFieldDocsPhotosPath(branch, projectNum);
-          const secondary_folder_name = `${projectNum}`;
 
           // Verify the source file exists before attempting to process it
           if (!fs.existsSync(absolutePhotoPath)) {
@@ -388,7 +329,6 @@ async function savePhotosProcess() {
               absolutePhotoPath,
               newPhotoFolder,
               photo_array,
-              secondary_folder_name,
               projectNum,
               fieldVisitNotes
             );
@@ -425,6 +365,7 @@ async function savePhotosProcess() {
               }
             }
           } catch (copyError) {
+            console.log(copyError);
             logger.fileUploadError(
               absolutePhotoPath,
               newPhotoFolder,

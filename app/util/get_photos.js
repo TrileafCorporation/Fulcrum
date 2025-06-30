@@ -27,7 +27,7 @@ const ensurePhotosDirectory = async () => {
 
 const writeStreamToFile = async (nodeStream, photoPath) => {
   return new Promise((resolve, reject) => {
-    const writeStream = fs.createWriteStream(photoPath);
+    const writeStream = fs.createWriteStream(photoPath, { highWaterMark: 1024 * 1024 });
     nodeStream.pipe(writeStream);
     writeStream.on("finish", resolve);
     writeStream.on("error", reject);
@@ -35,23 +35,6 @@ const writeStreamToFile = async (nodeStream, photoPath) => {
 };
 
 export const createLookupRecord = async (accessKey, client, record) => {
-  // First check if a lookup record already exists for this access_key
-  try {
-    const existingRecords = await client.records.all({
-      form_id: process.env.FULCRUM_FORM_LOOK_UP,
-      q: `field_2426:"${accessKey}"`,
-    });
-
-    if (existingRecords.objects.length > 0) {
-      console.log(`Lookup record already exists for access_key: ${accessKey}`);
-      return existingRecords.objects[0];
-    }
-  } catch (searchError) {
-    console.warn(
-      `Warning: Could not search for existing lookup record: ${searchError.message}`
-    );
-    // Continue with creation attempt
-  }
 
   const obj = {
     form_id: process.env.FULCRUM_FORM_LOOK_UP,
@@ -60,6 +43,7 @@ export const createLookupRecord = async (accessKey, client, record) => {
     form_values: {
       2426: accessKey,
       cb30: record.form_values["bfd0"],
+      "7bc8": record.id
     },
   };
 
@@ -79,15 +63,17 @@ export const createLookupRecord = async (accessKey, client, record) => {
   }
 };
 
-export const get_photos = async (record_id, look_up, client, record) => {
+export const get_photos = async (record_id, look_up, client) => {
   await ensurePhotosDirectory();
 
   try {
     const page = await client.photos.all({
-      form_id: process.env.FULCRUM_FORM_ID,
       record_id: record_id,
+      processed: true,
+      stored: true,
+      uploaded: true
     });
-
+   
     const photoPromises = page.objects.map(async (photo) => {
       console.log(`Processing photo: ${photo.access_key}`);
 

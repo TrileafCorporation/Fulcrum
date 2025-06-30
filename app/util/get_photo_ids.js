@@ -1,21 +1,14 @@
-export const get_photo_ids = async (client) => {
-  const look_up_array = [];
+export const get_photo_ids = async (client, recordId) => {
+  let look_up_array = [];
 
   try {
-    const page = await client.records.all({
-      form_id: process.env.FULCRUM_FORM_LOOK_UP,
-    });
-
-    page.objects.forEach((record) => {
-      // Ensure that form_values and the specific key exist
-      if (record.form_values && record.form_values["2426"]) {
-        look_up_array.push(record.form_values["2426"]);
-      } else {
-        console.warn(`Record ${record.id} is missing form_values["2426"]`);
-      }
-    });
-
+    let query = `SELECT photo_id FROM "${process.env.FULCRUM_FORM_LOOK_UP}" WHERE record_id = '${recordId}'`;
+    let queryResults = await client.query(query, 'json')
+    if (queryResults && queryResults.rows) {
+      look_up_array = queryResults.rows.map(row => row.photo_id);
+    }
     return look_up_array;
+
   } catch (error) {
     console.error("Error fetching photo IDs:", error.message);
     // Depending on your use case, you might want to rethrow the error or return a default value

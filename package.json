@@ -18,15 +18,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@azure/msal-node": "^3.0.1",
-    "@microsoft/microsoft-graph-client": "^3.0.7",
     "commander": "^14.0.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "fulcrum-app": "^2.7.0",
-    "isomorphic-fetch": "^3.0.0",
     "node-cron": "^3.0.3",
-    "node-fetch": "^3.3.2",
     "winston": "^3.17.0"
   }
 }
