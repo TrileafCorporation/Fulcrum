@@ -27,7 +27,9 @@ const ensurePhotosDirectory = async () => {
 
 const writeStreamToFile = async (nodeStream, photoPath) => {
   return new Promise((resolve, reject) => {
-    const writeStream = fs.createWriteStream(photoPath, { highWaterMark: 1024 * 1024 });
+    const writeStream = fs.createWriteStream(photoPath, {
+      highWaterMark: 1024 * 1024,
+    });
     nodeStream.pipe(writeStream);
     writeStream.on("finish", resolve);
     writeStream.on("error", reject);
@@ -35,7 +37,6 @@ const writeStreamToFile = async (nodeStream, photoPath) => {
 };
 
 export const createLookupRecord = async (accessKey, client, record) => {
-
   const obj = {
     form_id: process.env.FULCRUM_FORM_LOOK_UP,
     latitude: 27.770787,
@@ -43,7 +44,7 @@ export const createLookupRecord = async (accessKey, client, record) => {
     form_values: {
       2426: accessKey,
       cb30: record.form_values["bfd0"],
-      "7bc8": record.id
+      "7bc8": record.id,
     },
   };
 
@@ -63,17 +64,24 @@ export const createLookupRecord = async (accessKey, client, record) => {
   }
 };
 
-export const get_photos = async (record_id, look_up, client) => {
+export const get_photos = async (
+  record_id,
+  look_up,
+  client,
+  record,
+  logger
+) => {
   await ensurePhotosDirectory();
 
   try {
     const page = await client.photos.all({
+      form_id: process.env.FULCRUM_FORM_ID,
       record_id: record_id,
       processed: true,
       stored: true,
-      uploaded: true
+      uploaded: true,
     });
-   
+
     const photoPromises = page.objects.map(async (photo) => {
       console.log(`Processing photo: ${photo.access_key}`);
 
@@ -81,6 +89,14 @@ export const get_photos = async (record_id, look_up, client) => {
         console.log("access_key not found in look_up");
 
         const photoFilename = path.join(photosDir, `${photo.access_key}.jpg`);
+
+        // Log photo download start
+        if (logger) {
+          logger.photoDownloadStart(record_id, photo.access_key, {
+            projectNum: record?.form_values?.["bfd0"],
+            filename: `${photo.access_key}.jpg`,
+          });
+        }
 
         try {
           const response = await client.photos.media(
@@ -106,6 +122,20 @@ export const get_photos = async (record_id, look_up, client) => {
             console.log(
               `Photo verified: ${photoFilename} (${stats.size} bytes)`
             );
+
+            // Log successful photo download
+            if (logger) {
+              logger.photoDownloadSuccess(
+                record_id,
+                photo.access_key,
+                photoFilename,
+                {
+                  projectNum: record?.form_values?.["bfd0"],
+                  filename: `${photo.access_key}.jpg`,
+                  fileSizeBytes: stats.size,
+                }
+              );
+            }
           } catch (statError) {
             console.error(
               `Error verifying downloaded photo: ${statError.message}`
@@ -119,6 +149,21 @@ export const get_photos = async (record_id, look_up, client) => {
                 `Failed to clean up empty photo file: ${unlinkError.message}`
               );
             }
+
+            // Log photo download error
+            if (logger) {
+              logger.photoDownloadError(
+                record_id,
+                photo.access_key,
+                statError,
+                {
+                  projectNum: record?.form_values?.["bfd0"],
+                  filename: `${photo.access_key}.jpg`,
+                  reason: "verification_failed",
+                }
+              );
+            }
+
             throw new Error(
               `Photo download verification failed: ${statError.message}`
             );
@@ -131,6 +176,16 @@ export const get_photos = async (record_id, look_up, client) => {
             `Error processing photo ${photo.access_key}:`,
             photoError.message
           );
+
+          // Log photo download error
+          if (logger) {
+            logger.photoDownloadError(record_id, photo.access_key, photoError, {
+              projectNum: record?.form_values?.["bfd0"],
+              filename: `${photo.access_key}.jpg`,
+              reason: "download_failed",
+            });
+          }
+
           // Don't re-throw here to allow other photos to continue processing
         }
       } else {
