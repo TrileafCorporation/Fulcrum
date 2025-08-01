@@ -11,6 +11,10 @@ import { getFilesInFolder } from "./app/util/get_photos_folder.js";
 import { get_photo_ids } from "./app/util/get_photo_ids.js";
 import { downloadFulcrumPDF } from "./app/util/get_pdf_file.js";
 import logger from "./app/logging/AdvancedLogger.js";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
@@ -262,6 +266,10 @@ async function savePhotosProcess() {
       let projectNum = record.form_values["bfd0"];
       let branch = record.form_values["4730"]?.choice_values?.[0];
 
+      // if (projectNum !== 769707) {
+      //   continue;
+      // }
+
       logger.recordStart(record.id, projectNum, status, photo_array.length, {
         branch,
         fieldVisitNotes: record.form_values["638f"],
@@ -280,13 +288,15 @@ async function savePhotosProcess() {
         // Uncomment if this functionality is needed in the future!
         // await cleanupDuplicatePDFs(branch, projectNum);
 
+
+
         const look_up_array = await get_photo_ids(client, record.id);
 
         await downloadFulcrumPDF(record.id);
 
         await get_photos(`${record.id}`, look_up_array, client, record, logger);
 
-        const photos = await getFilesInFolder("./app/util/photos", {
+        const photos = await getFilesInFolder(path.join(__dirname, "./app/util/photos"), {
           onlyFiles: true,
         });
 
@@ -303,7 +313,7 @@ async function savePhotosProcess() {
 
         for (const relativePhotoPath of photos) {
           const filename = path.basename(relativePhotoPath);
-          const absolutePhotoPath = path.resolve("./app/util/photos", filename);
+          const absolutePhotoPath = path.resolve(__dirname, "./app/util/photos", filename);
 
           // Verify the source file exists before attempting to process it
           if (!fs.existsSync(absolutePhotoPath)) {
@@ -390,7 +400,7 @@ async function savePhotosProcess() {
 
         // Only clean up photos after ALL photos for this record have been processed
         try {
-          await clean_up_photos("./app/util/photos");
+          await clean_up_photos(path.join(__dirname, "./app/util/photos"));
         } catch (cleanupError) {
           logger.warn("Error during photo cleanup, continuing", {
             action: "cleanup_error",
@@ -417,7 +427,7 @@ async function savePhotosProcess() {
       totalRecords: records.objects.length,
     });
 
-    await clean_up_photos("./app/util/photos");
+    await clean_up_photos(path.join(__dirname, "./app/util/photos"));
     return { success: true };
   } catch (error) {
     logger.error("Error in photo-saving process", error, {

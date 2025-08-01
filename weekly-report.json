@@ -1,0 +1,451 @@
+{
+  "generatedAt": "2025-07-31T15:44:24.365Z",
+  "timeRange": "Last 295 hours",
+  "summary": {
+    "totalErrors": 12,
+    "totalOperations": 518,
+    "photoSuccessRate": "0%",
+    "uploadSuccessRate": "91%"
+  },
+  "errors": {
+    "count": 12,
+    "recent": [
+      {
+        "timestamp": "2025-07-19 04:00:17.999",
+        "message": "File upload failed",
+        "error": {
+          "name": "Error",
+          "message": "EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'",
+          "stack": "Error: EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'\n    at async Object.copyFile (node:internal/fs/promises:620:10)\n    at async copyImageToFolder (file:///C:/Fulcrum/app/util/put_file.js:73:5)\n    at async savePhotosProcess (file:///C:/Fulcrum/index.main.js:328:37)\n    at async Task._execution (file:///C:/Fulcrum/index.main.js:477:5)",
+          "code": "EBUSY"
+        },
+        "context": {
+          "recordId": "793bce57-263e-4a35-a699-4324be591a08",
+          "projectNum": "768745",
+          "action": "file_upload_error"
+        }
+      },
+      {
+        "timestamp": "2025-07-19 04:30:18.836",
+        "message": "File upload failed",
+        "error": {
+          "name": "Error",
+          "message": "EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'",
+          "stack": "Error: EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'\n    at async Object.copyFile (node:internal/fs/promises:620:10)\n    at async copyImageToFolder (file:///C:/Fulcrum/app/util/put_file.js:73:5)\n    at async savePhotosProcess (file:///C:/Fulcrum/index.main.js:328:37)\n    at async Task._execution (file:///C:/Fulcrum/index.main.js:477:5)",
+          "code": "EBUSY"
+        },
+        "context": {
+          "recordId": "793bce57-263e-4a35-a699-4324be591a08",
+          "projectNum": "768745",
+          "action": "file_upload_error"
+        }
+      },
+      {
+        "timestamp": "2025-07-19 05:00:25.092",
+        "message": "File upload failed",
+        "error": {
+          "name": "Error",
+          "message": "EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'",
+          "stack": "Error: EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'\n    at async Object.copyFile (node:internal/fs/promises:620:10)\n    at async copyImageToFolder (file:///C:/Fulcrum/app/util/put_file.js:73:5)\n    at async savePhotosProcess (file:///C:/Fulcrum/index.main.js:328:37)\n    at async Task._execution (file:///C:/Fulcrum/index.main.js:477:5)",
+          "code": "EBUSY"
+        },
+        "context": {
+          "recordId": "793bce57-263e-4a35-a699-4324be591a08",
+          "projectNum": "768745",
+          "action": "file_upload_error"
+        }
+      },
+      {
+        "timestamp": "2025-07-19 05:30:23.260",
+        "message": "File upload failed",
+        "error": {
+          "name": "Error",
+          "message": "EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'",
+          "stack": "Error: EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'\n    at async Object.copyFile (node:internal/fs/promises:620:10)\n    at async copyImageToFolder (file:///C:/Fulcrum/app/util/put_file.js:73:5)\n    at async savePhotosProcess (file:///C:/Fulcrum/index.main.js:328:37)\n    at async Task._execution (file:///C:/Fulcrum/index.main.js:477:5)",
+          "code": "EBUSY"
+        },
+        "context": {
+          "recordId": "793bce57-263e-4a35-a699-4324be591a08",
+          "projectNum": "768745",
+          "action": "file_upload_error"
+        }
+      },
+      {
+        "timestamp": "2025-07-19 06:00:22.774",
+        "message": "File upload failed",
+        "error": {
+          "name": "Error",
+          "message": "EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'",
+          "stack": "Error: EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'\n    at async Object.copyFile (node:internal/fs/promises:620:10)\n    at async copyImageToFolder (file:///C:/Fulcrum/app/util/put_file.js:73:5)\n    at async savePhotosProcess (file:///C:/Fulcrum/index.main.js:328:37)\n    at async Task._execution (file:///C:/Fulcrum/index.main.js:477:5)",
+          "code": "EBUSY"
+        },
+        "context": {
+          "recordId": "793bce57-263e-4a35-a699-4324be591a08",
+          "projectNum": "768745",
+          "action": "file_upload_error"
+        }
+      },
+      {
+        "timestamp": "2025-07-19 06:30:24.254",
+        "message": "File upload failed",
+        "error": {
+          "name": "Error",
+          "message": "EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'",
+          "stack": "Error: EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'\n    at async Object.copyFile (node:internal/fs/promises:620:10)\n    at async copyImageToFolder (file:///C:/Fulcrum/app/util/put_file.js:73:5)\n    at async savePhotosProcess (file:///C:/Fulcrum/index.main.js:328:37)\n    at async Task._execution (file:///C:/Fulcrum/index.main.js:477:5)",
+          "code": "EBUSY"
+        },
+        "context": {
+          "recordId": "793bce57-263e-4a35-a699-4324be591a08",
+          "projectNum": "768745",
+          "action": "file_upload_error"
+        }
+      },
+      {
+        "timestamp": "2025-07-19 07:00:31.829",
+        "message": "File upload failed",
+        "error": {
+          "name": "Error",
+          "message": "EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'",
+          "stack": "Error: EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'\n    at async Object.copyFile (node:internal/fs/promises:620:10)\n    at async copyImageToFolder (file:///C:/Fulcrum/app/util/put_file.js:73:5)\n    at async savePhotosProcess (file:///C:/Fulcrum/index.main.js:328:37)\n    at async Task._execution (file:///C:/Fulcrum/index.main.js:477:5)",
+          "code": "EBUSY"
+        },
+        "context": {
+          "recordId": "793bce57-263e-4a35-a699-4324be591a08",
+          "projectNum": "768745",
+          "action": "file_upload_error"
+        }
+      },
+      {
+        "timestamp": "2025-07-19 07:01:00.382",
+        "message": "Record processing failed",
+        "error": {
+          "name": "Error",
+          "message": "HTTP 500",
+          "stack": "Error: HTTP 500\n    at Fetcher._callee$ (C:\\Fulcrum\\node_modules\\fulcrum-app\\dist\\fetcher.js:112:23)\n    at tryCatch (C:\\Fulcrum\\node_modules\\babel-runtime\\node_modules\\regenerator-runtime\\runtime.js:62:40)\n    at Generator.invoke [as _invoke] (C:\\Fulcrum\\node_modules\\babel-runtime\\node_modules\\regenerator-runtime\\runtime.js:296:22)\n    at prototype.<computed> [as next] (C:\\Fulcrum\\node_modules\\babel-runtime\\node_modules\\regenerator-runtime\\runtime.js:114:21)\n    at step (C:\\Fulcrum\\node_modules\\babel-runtime\\helpers\\asyncToGenerator.js:17:30)\n    at C:\\Fulcrum\\node_modules\\babel-runtime\\helpers\\asyncToGenerator.js:28:13\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)"
+        },
+        "context": {
+          "recordId": "20584f8b-910e-4c87-a96c-106cd0095cd3",
+          "projectNum": "768445",
+          "action": "record_error"
+        }
+      },
+      {
+        "timestamp": "2025-07-19 07:30:18.452",
+        "message": "File upload failed",
+        "error": {
+          "name": "Error",
+          "message": "EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'",
+          "stack": "Error: EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'\n    at async Object.copyFile (node:internal/fs/promises:620:10)\n    at async copyImageToFolder (file:///C:/Fulcrum/app/util/put_file.js:73:5)\n    at async savePhotosProcess (file:///C:/Fulcrum/index.main.js:328:37)\n    at async Task._execution (file:///C:/Fulcrum/index.main.js:477:5)",
+          "code": "EBUSY"
+        },
+        "context": {
+          "recordId": "793bce57-263e-4a35-a699-4324be591a08",
+          "projectNum": "768745",
+          "action": "file_upload_error"
+        }
+      },
+      {
+        "timestamp": "2025-07-19 08:00:49.969",
+        "message": "File upload failed",
+        "error": {
+          "name": "Error",
+          "message": "EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'",
+          "stack": "Error: EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'\n    at async Object.copyFile (node:internal/fs/promises:620:10)\n    at async copyImageToFolder (file:///C:/Fulcrum/app/util/put_file.js:73:5)\n    at async savePhotosProcess (file:///C:/Fulcrum/index.main.js:328:37)\n    at async Task._execution (file:///C:/Fulcrum/index.main.js:477:5)",
+          "code": "EBUSY"
+        },
+        "context": {
+          "recordId": "793bce57-263e-4a35-a699-4324be591a08",
+          "projectNum": "768745",
+          "action": "file_upload_error"
+        }
+      }
+    ],
+    "byType": {
+      "Error": [
+        {
+          "timestamp": "2025-07-19 04:00:17.999",
+          "message": "File upload failed",
+          "error": {
+            "name": "Error",
+            "message": "EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'",
+            "stack": "Error: EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'\n    at async Object.copyFile (node:internal/fs/promises:620:10)\n    at async copyImageToFolder (file:///C:/Fulcrum/app/util/put_file.js:73:5)\n    at async savePhotosProcess (file:///C:/Fulcrum/index.main.js:328:37)\n    at async Task._execution (file:///C:/Fulcrum/index.main.js:477:5)",
+            "code": "EBUSY"
+          },
+          "context": {
+            "recordId": "793bce57-263e-4a35-a699-4324be591a08",
+            "projectNum": "768745",
+            "action": "file_upload_error"
+          }
+        },
+        {
+          "timestamp": "2025-07-19 04:30:18.836",
+          "message": "File upload failed",
+          "error": {
+            "name": "Error",
+            "message": "EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'",
+            "stack": "Error: EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'\n    at async Object.copyFile (node:internal/fs/promises:620:10)\n    at async copyImageToFolder (file:///C:/Fulcrum/app/util/put_file.js:73:5)\n    at async savePhotosProcess (file:///C:/Fulcrum/index.main.js:328:37)\n    at async Task._execution (file:///C:/Fulcrum/index.main.js:477:5)",
+            "code": "EBUSY"
+          },
+          "context": {
+            "recordId": "793bce57-263e-4a35-a699-4324be591a08",
+            "projectNum": "768745",
+            "action": "file_upload_error"
+          }
+        },
+        {
+          "timestamp": "2025-07-19 05:00:25.092",
+          "message": "File upload failed",
+          "error": {
+            "name": "Error",
+            "message": "EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'",
+            "stack": "Error: EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'\n    at async Object.copyFile (node:internal/fs/promises:620:10)\n    at async copyImageToFolder (file:///C:/Fulcrum/app/util/put_file.js:73:5)\n    at async savePhotosProcess (file:///C:/Fulcrum/index.main.js:328:37)\n    at async Task._execution (file:///C:/Fulcrum/index.main.js:477:5)",
+            "code": "EBUSY"
+          },
+          "context": {
+            "recordId": "793bce57-263e-4a35-a699-4324be591a08",
+            "projectNum": "768745",
+            "action": "file_upload_error"
+          }
+        },
+        {
+          "timestamp": "2025-07-19 05:30:23.260",
+          "message": "File upload failed",
+          "error": {
+            "name": "Error",
+            "message": "EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'",
+            "stack": "Error: EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'\n    at async Object.copyFile (node:internal/fs/promises:620:10)\n    at async copyImageToFolder (file:///C:/Fulcrum/app/util/put_file.js:73:5)\n    at async savePhotosProcess (file:///C:/Fulcrum/index.main.js:328:37)\n    at async Task._execution (file:///C:/Fulcrum/index.main.js:477:5)",
+            "code": "EBUSY"
+          },
+          "context": {
+            "recordId": "793bce57-263e-4a35-a699-4324be591a08",
+            "projectNum": "768745",
+            "action": "file_upload_error"
+          }
+        },
+        {
+          "timestamp": "2025-07-19 06:00:22.774",
+          "message": "File upload failed",
+          "error": {
+            "name": "Error",
+            "message": "EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'",
+            "stack": "Error: EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'\n    at async Object.copyFile (node:internal/fs/promises:620:10)\n    at async copyImageToFolder (file:///C:/Fulcrum/app/util/put_file.js:73:5)\n    at async savePhotosProcess (file:///C:/Fulcrum/index.main.js:328:37)\n    at async Task._execution (file:///C:/Fulcrum/index.main.js:477:5)",
+            "code": "EBUSY"
+          },
+          "context": {
+            "recordId": "793bce57-263e-4a35-a699-4324be591a08",
+            "projectNum": "768745",
+            "action": "file_upload_error"
+          }
+        },
+        {
+          "timestamp": "2025-07-19 06:30:24.254",
+          "message": "File upload failed",
+          "error": {
+            "name": "Error",
+            "message": "EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'",
+            "stack": "Error: EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'\n    at async Object.copyFile (node:internal/fs/promises:620:10)\n    at async copyImageToFolder (file:///C:/Fulcrum/app/util/put_file.js:73:5)\n    at async savePhotosProcess (file:///C:/Fulcrum/index.main.js:328:37)\n    at async Task._execution (file:///C:/Fulcrum/index.main.js:477:5)",
+            "code": "EBUSY"
+          },
+          "context": {
+            "recordId": "793bce57-263e-4a35-a699-4324be591a08",
+            "projectNum": "768745",
+            "action": "file_upload_error"
+          }
+        },
+        {
+          "timestamp": "2025-07-19 07:00:31.829",
+          "message": "File upload failed",
+          "error": {
+            "name": "Error",
+            "message": "EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'",
+            "stack": "Error: EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'\n    at async Object.copyFile (node:internal/fs/promises:620:10)\n    at async copyImageToFolder (file:///C:/Fulcrum/app/util/put_file.js:73:5)\n    at async savePhotosProcess (file:///C:/Fulcrum/index.main.js:328:37)\n    at async Task._execution (file:///C:/Fulcrum/index.main.js:477:5)",
+            "code": "EBUSY"
+          },
+          "context": {
+            "recordId": "793bce57-263e-4a35-a699-4324be591a08",
+            "projectNum": "768745",
+            "action": "file_upload_error"
+          }
+        },
+        {
+          "timestamp": "2025-07-19 07:01:00.382",
+          "message": "Record processing failed",
+          "error": {
+            "name": "Error",
+            "message": "HTTP 500",
+            "stack": "Error: HTTP 500\n    at Fetcher._callee$ (C:\\Fulcrum\\node_modules\\fulcrum-app\\dist\\fetcher.js:112:23)\n    at tryCatch (C:\\Fulcrum\\node_modules\\babel-runtime\\node_modules\\regenerator-runtime\\runtime.js:62:40)\n    at Generator.invoke [as _invoke] (C:\\Fulcrum\\node_modules\\babel-runtime\\node_modules\\regenerator-runtime\\runtime.js:296:22)\n    at prototype.<computed> [as next] (C:\\Fulcrum\\node_modules\\babel-runtime\\node_modules\\regenerator-runtime\\runtime.js:114:21)\n    at step (C:\\Fulcrum\\node_modules\\babel-runtime\\helpers\\asyncToGenerator.js:17:30)\n    at C:\\Fulcrum\\node_modules\\babel-runtime\\helpers\\asyncToGenerator.js:28:13\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)"
+          },
+          "context": {
+            "recordId": "20584f8b-910e-4c87-a96c-106cd0095cd3",
+            "projectNum": "768445",
+            "action": "record_error"
+          }
+        },
+        {
+          "timestamp": "2025-07-19 07:30:18.452",
+          "message": "File upload failed",
+          "error": {
+            "name": "Error",
+            "message": "EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'",
+            "stack": "Error: EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'\n    at async Object.copyFile (node:internal/fs/promises:620:10)\n    at async copyImageToFolder (file:///C:/Fulcrum/app/util/put_file.js:73:5)\n    at async savePhotosProcess (file:///C:/Fulcrum/index.main.js:328:37)\n    at async Task._execution (file:///C:/Fulcrum/index.main.js:477:5)",
+            "code": "EBUSY"
+          },
+          "context": {
+            "recordId": "793bce57-263e-4a35-a699-4324be591a08",
+            "projectNum": "768745",
+            "action": "file_upload_error"
+          }
+        },
+        {
+          "timestamp": "2025-07-19 08:00:49.969",
+          "message": "File upload failed",
+          "error": {
+            "name": "Error",
+            "message": "EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'",
+            "stack": "Error: EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'\n    at async Object.copyFile (node:internal/fs/promises:620:10)\n    at async copyImageToFolder (file:///C:/Fulcrum/app/util/put_file.js:73:5)\n    at async savePhotosProcess (file:///C:/Fulcrum/index.main.js:328:37)\n    at async Task._execution (file:///C:/Fulcrum/index.main.js:477:5)",
+            "code": "EBUSY"
+          },
+          "context": {
+            "recordId": "793bce57-263e-4a35-a699-4324be591a08",
+            "projectNum": "768745",
+            "action": "file_upload_error"
+          }
+        },
+        {
+          "timestamp": "2025-07-19 08:30:20.746",
+          "message": "File upload failed",
+          "error": {
+            "name": "Error",
+            "message": "EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'",
+            "stack": "Error: EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'\n    at async Object.copyFile (node:internal/fs/promises:620:10)\n    at async copyImageToFolder (file:///C:/Fulcrum/app/util/put_file.js:73:5)\n    at async savePhotosProcess (file:///C:/Fulcrum/index.main.js:328:37)\n    at async Task._execution (file:///C:/Fulcrum/index.main.js:477:5)",
+            "code": "EBUSY"
+          },
+          "context": {
+            "recordId": "793bce57-263e-4a35-a699-4324be591a08",
+            "projectNum": "768745",
+            "action": "file_upload_error"
+          }
+        },
+        {
+          "timestamp": "2025-07-19 09:00:15.098",
+          "message": "File upload failed",
+          "error": {
+            "name": "Error",
+            "message": "EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'",
+            "stack": "Error: EBUSY: resource busy or locked, copyfile 'C:\\Fulcrum\\app\\util\\photos\\fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf' -> '\\\\trileaf.local\\Project_Folders\\Chicago\\768745 Tillman Infrastructure LLC-TI-OPP- 36225\\Field Docs\\Photos\\Project #768745, Project Report.pdf'\n    at async Object.copyFile (node:internal/fs/promises:620:10)\n    at async copyImageToFolder (file:///C:/Fulcrum/app/util/put_file.js:73:5)\n    at async savePhotosProcess (file:///C:/Fulcrum/index.main.js:328:37)\n    at async Task._execution (file:///C:/Fulcrum/index.main.js:477:5)",
+            "code": "EBUSY"
+          },
+          "context": {
+            "recordId": "793bce57-263e-4a35-a699-4324be591a08",
+            "projectNum": "768745",
+            "action": "file_upload_error"
+          }
+        }
+      ]
+    }
+  },
+  "performance": {
+    "timeRange": "Last 295 hours",
+    "totalOperations": 518,
+    "averageDurations": {
+      "upload_fulcrum_report_ec6f3484-c93e-4d84-81bb-95c36f88247a.pdf": 42,
+      "record_ec6f3484-c93e-4d84-81bb-95c36f88247a": 10066,
+      "upload_fulcrum_report_7971b256-d5cc-4ad7-8c20-b02dd33028ff.pdf": 27,
+      "record_7971b256-d5cc-4ad7-8c20-b02dd33028ff": 5017,
+      "upload_fulcrum_report_793bce57-263e-4a35-a699-4324be591a08.pdf": 13,
+      "record_793bce57-263e-4a35-a699-4324be591a08": 9273,
+      "upload_fulcrum_report_c3ed10ff-06c1-4a31-b042-14b8cd883f6c.pdf": 24,
+      "record_c3ed10ff-06c1-4a31-b042-14b8cd883f6c": 4918,
+      "upload_fulcrum_report_eb5630e0-0356-4c18-accb-d2c61e16ddd6.pdf": 36,
+      "record_eb5630e0-0356-4c18-accb-d2c61e16ddd6": 7853,
+      "upload_fulcrum_report_0ae66023-fcb3-4daf-8dda-24423ded3b6e.pdf": 37,
+      "record_0ae66023-fcb3-4daf-8dda-24423ded3b6e": 7405,
+      "upload_fulcrum_report_20584f8b-910e-4c87-a96c-106cd0095cd3.pdf": 56,
+      "record_20584f8b-910e-4c87-a96c-106cd0095cd3": 11121,
+      "upload_fulcrum_report_ceb8ba9c-98a5-4706-89f1-b5ccbb406751.pdf": 43,
+      "record_ceb8ba9c-98a5-4706-89f1-b5ccbb406751": 7612,
+      "full_process": 38279
+    },
+    "slowestOperations": [
+      {
+        "operation": "full_process",
+        "maxDuration": 81860,
+        "avgDuration": 38279,
+        "count": 50
+      },
+      {
+        "operation": "record_ec6f3484-c93e-4d84-81bb-95c36f88247a",
+        "maxDuration": 24926,
+        "avgDuration": 10066,
+        "count": 20
+      },
+      {
+        "operation": "record_20584f8b-910e-4c87-a96c-106cd0095cd3",
+        "maxDuration": 23341,
+        "avgDuration": 11121,
+        "count": 42
+      },
+      {
+        "operation": "record_793bce57-263e-4a35-a699-4324be591a08",
+        "maxDuration": 20419,
+        "avgDuration": 9273,
+        "count": 22
+      },
+      {
+        "operation": "record_ceb8ba9c-98a5-4706-89f1-b5ccbb406751",
+        "maxDuration": 16304,
+        "avgDuration": 7612,
+        "count": 44
+      },
+      {
+        "operation": "record_0ae66023-fcb3-4daf-8dda-24423ded3b6e",
+        "maxDuration": 14915,
+        "avgDuration": 7405,
+        "count": 30
+      },
+      {
+        "operation": "record_eb5630e0-0356-4c18-accb-d2c61e16ddd6",
+        "maxDuration": 12920,
+        "avgDuration": 7853,
+        "count": 30
+      },
+      {
+        "operation": "record_c3ed10ff-06c1-4a31-b042-14b8cd883f6c",
+        "maxDuration": 9317,
+        "avgDuration": 4918,
+        "count": 24
+      },
+      {
+        "operation": "record_7971b256-d5cc-4ad7-8c20-b02dd33028ff",
+        "maxDuration": 6971,
+        "avgDuration": 5017,
+        "count": 22
+      },
+      {
+        "operation": "upload_fulcrum_report_ceb8ba9c-98a5-4706-89f1-b5ccbb406751.pdf",
+        "maxDuration": 120,
+        "avgDuration": 43,
+        "count": 44
+      }
+    ]
+  },
+  "uploads": {
+    "timeRange": "Last 295 hours",
+    "photos": {
+      "downloaded": 0,
+      "failed": 0,
+      "successRate": "0%"
+    },
+    "uploads": {
+      "successful": 106,
+      "failed": 11,
+      "successRate": "91%"
+    },
+    "records": {
+      "processed": 182,
+      "successful": 117,
+      "failed": 1,
+      "skipped": 64
+    }
+  }
+}
